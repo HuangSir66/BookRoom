@@ -1,0 +1,64 @@
+{% extends 'user_layout.html' %}
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px">
+            <a class="btn btn-success" href="/user/book/add/">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                预约会议室
+            </a>
+            <div style="float: right;width: 300px">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="date" name="q" class="form-control" placeholder="Search for..."
+                               value="{{ search_data }}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+        </div>
+        <div class="bs-example" data-example-id="table-within-panel">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    预约列表
+                </div>
+                <!-- Table -->
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>预约人员</th>
+                        <th>预约教室</th>
+                        <th>日期</th>
+                        <th>时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for obj in queryset %}
+                        <tr>
+                            <td>{{ obj.id }}</td>
+                            <td>{{ obj.username.name }}</td>
+                            <td>{{ obj.room.room }}</td>
+                            <td>{{ obj.date|date:'Y-m-d'  }}</td>
+                            <td>{{ obj.get_time_display }}</td>
+                            <td>
+                                <a class="btn btn-danger btn-xs" href="/book/{{ obj.id }}/delete">删除</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <ul class="pagination">
+        {{ page_string }}
+    </ul>
+    </div>
+{% endblock %}

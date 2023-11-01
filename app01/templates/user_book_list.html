@@ -1,0 +1,68 @@
+{% extends 'user_layout.html' %}
+{% block css %}
+    <style>
+    td:hover {
+            background: #D1FFFC;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px">
+            <a class="btn btn-success" href="/user/book/add/">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                预约会议室
+            </a>
+            <div style="float: right;width: 300px">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="date" name="q" class="form-control" placeholder={{ now_date }}
+                               value="{{ search_data }}">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+        </div>
+        <div class="bs-example" data-example-id="table-within-panel">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    会议室列表
+                </div>
+                <!-- Table -->
+                <table class="table table-bordered">
+                    <thead>
+                    <tr >
+                        <th>   </th>
+                        {% for room in rooms %}
+                        <td>{{ room.room }} 容纳人数：({{ room.num }}人)</td>
+                        {% endfor %}
+                    </tr>
+                    </thead>
+                    <tbody >
+                    {{ data }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <ul class="pagination">
+        {{ page_string }}
+    </ul>
+    </div>
+{#    <script>#}
+{#        let box = document.querySelector('td')#}
+{#        console.log(box)#}
+{#        box.addEventListener('click',function (){#}
+{#            this.style.background = '#D1FFFC'#}
+{#        });#}
+{#        box.addEventListener('click',function(){#}
+{#            this.style.background = '#D1FFFC'#}
+{#        })#}
+{#    </script>#}
+{% endblock %}

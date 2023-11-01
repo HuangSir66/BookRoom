@@ -1,0 +1,117 @@
+{% extends 'layout.html' %}
+{% block css %}
+    <style>
+        .outer{
+            width: 100%;
+            height: 40px;
+            background-color: #337ab7;
+            color: white;
+            line-height: 40px;
+        }
+
+        .left{
+            float: left;
+            margin-top: 10px;
+            margin-left: 10px;
+            color: black;
+            height: 20px;
+        }
+        #title{
+            float: right;
+            margin-right: 500px;
+            font-size: 20px;
+        }
+        #date{
+            float: left;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="outer">
+            <div id="date">          #这是日期
+                <form action="/houseorder/" method="post">
+                {% csrf_token %}
+                <div>                        
+                    <input type="submit" style="color: black;height: 20px;margin-top: 10px;line-height: 20px">
+                    <input type="date" name="time" class="left" value="{{ date }}">
+                </div>
+                </form>
+            </div>
+            <div id="title">会议室预定表</div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>会议室</th>
+                    {% for choice in choices %}   #这是循环生产时间的信息，也就是表头
+                        <th>{{ choice.1 }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {{ data }}         #所有的表体数据都是由后端构造的
+            </tbody>
+        </table>
+        <button class="btn btn-info tijiao">保存</button>
+    </div>
+
+{% endblock %}
+{% block js %}
+    <script>
+        var add_dic={};
+        var del_dic={};
+        //给每个nn类的标签绑定点击事件
+        $('.nn').click(function () {
+            var text=$(this).text();
+            var user=$('.user').attr('id');
+            console.log(user);
+            var num=$(this).children('span').first().attr('class');
+            var name=$(this).parent().attr('class');
+            //已经被别人选中的
+            if ($(this).hasClass('warning')){
+                alert('别人已经选定')
+            }
+            //被自己选中的
+            else if ($(this).hasClass('danger')){
+                $(this).removeClass('danger');
+                $(this).children('span').text('');
+                if (del_dic[name]){
+                    del_dic[name].push(num)}
+                else {del_dic[name]=[num]}
+            }
+            //刚才被点中的，再次点击，取消颜色
+            else if($(this).hasClass('success')){
+                $(this).removeClass('success');
+            }
+            //没被选中的，点击变颜色
+            else {
+                $(this).addClass('success');
+            }
+        });
+        //保存的点击事件
+        $('.tijiao').click(function () {
+            //循环所有的td标签，然后把拥有success类的标签的值放入add_dic
+            $('td').each(function () {
+                var num=$(this).children('span').first().attr('class');
+                var name=$(this).parent().attr('class');
+                if($(this).hasClass('success')){
+                    if (add_dic[name]){
+                        add_dic[name].push(num)}
+                    else {add_dic[name]=[num]}
+                }});
+            //把add_dic，not_add_dic加入一个列表中，最后把当前选择的日期也放进去
+            var date=$('.left').first().val();
+            //用ajax请求，把列表发送到后端
+            $.ajax({
+                url:'',
+                type:'post',
+                data: {'add_dic':JSON.stringify(add_dic),'del_dic':JSON.stringify(del_dic),'date':JSON.stringify(date),'csrfmiddlewaretoken':$('[name="csrfmiddlewaretoken"]').val()},
+                success: function (res) {
+                    console.log(res);
+                    location.href='/house/?time='+res
+                }
+            })
+        })
+    </script>
+{% endblock %}

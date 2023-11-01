@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% block content %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.min.css' %}">
+{% endblock %}
+    <div>
+        <div class="container">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ title }}</h3>
+                </div>
+                <div class="panel-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="form-group">
+                                <label>{{ field.label }}</label>
+                                {{ field }}
+                                <span style="color: red">{{ field.errors.0 }}</span>
+                                {#                        <input type="text" class="form-control" placeholder="标题" name="user">#}
+                            </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">提 交</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'plugins/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.min.js' %}"></script>
+    <script src="{% static 'plugins/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.zh-TW.js' %}"></script>
+    <script>
+    $(function(){
+        $('#id_date').datetimepicker({
+            minView:'month',
+            format:'yyyy-mm-dd',
+            startDate:'8',
+            language:'zh-TW',
+            autoclose:true,
+            timepicker: true,
+        });
+    })
+    </script>
+{% endblock %}
